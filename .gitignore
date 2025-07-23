@@ -1,0 +1,18 @@
+# Ignore o ambiente virtual do Poetry
+.venv/
+
+# Ignorar o arquivo de lock (opcional, mas recomendado para equipes)
+# Se você quiser que o Poetry resolva as dependências em cada máquina
+# em vez de usar uma versão travada, você pode ignorar o poetry.lock
+# poetry.lock
+
+# Ignorar arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Ignorar arquivos de cache do sistema operacional e do editor de código
+.DS_Store
+.vscode/
+
+# Ignorar arquivos de variáveis de ambiente
+.env

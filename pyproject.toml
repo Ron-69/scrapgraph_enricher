@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "poc-ecad-ia-captacao-shows-eventos-vs3"
+version = "0.1.0"
+description = "Um projeto de raspagem e enriquecimento de dados de eventos musicais."
+authors = ["ronaldo <ronaldo-ramos@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+include = ["src"]
+
+[tool.poetry.dependencies] 
+python = ">=3.11,<4.0"
+scrapegraphai = ">=1.61.0,<2.0.0"
+google-generativeai = ">=0.8.5,<0.9.0"
+pandas = ">=2.3.1,<3.0.0"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
