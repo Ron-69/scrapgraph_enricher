@@ -39,40 +39,7 @@ TARGET_URLS = [
 ]
 
 # JSON Schema para o Scrapegraph AI
-JSON_SCHEMA_STR = """
-[
-    {
-        "nome_do_evento": "string | null",
-        "tipo_do_evento": "string | null",
-        "interpretes": "array of string | null",
-        "promotor": {
-            "nome": "string | null",
-            "cnpj": "string | null",
-            "telefone": "string | null",
-            "email": "string | null"
-        },
-        "datas_do_evento": "string | null",
-        "horario_do_evento": "string | null",
-        "local_do_evento": {
-            "nome": "string | null",
-            "cnpj": "string | null"
-        },
-        "local_de_realizacao": {
-            "endereco_completo": "string | null"
-        },
-        "capacidade_do_local": "string | null",
-        "ingressos": [
-            {
-                "setor": "string | null",
-                "lote": "string | null",
-                "valor": "string | null"
-            }
-        ],
-        "fonte_de_divulgacao": "string | null",
-        "flyers_e_materiais_promocionais": "array of string | null"
-    }
-]
-"""
+JSON_SCHEMA_STR = Evento
 
 # Prompt para o Scrapegraph AI
 SCRAPER_PROMPT = f"""
@@ -99,9 +66,16 @@ async def main_scraper_loop(url: str, all_extracted_events: list, enricher: Gemi
         )
         raw_scrape_result = await asyncio.to_thread(smart_scraper_graph.run)
         
+        # Corrigido: Normaliza a estrutura de dados de eventos raspados
         events_from_url_raw = []
-        if isinstance(raw_scrape_result, dict) and 'content' in raw_scrape_result:
-            events_from_url_raw = raw_scrape_result['content']
+        if isinstance(raw_scrape_result, dict):
+            # Extrai a chave que contém a lista de eventos
+            key_with_events = next((k for k in raw_scrape_result if isinstance(raw_scrape_result[k], list)), None)
+            if key_with_events:
+                events_from_url_raw = raw_scrape_result[key_with_events]
+            else:
+                logger.warning(f"ATENÇÃO: Não foi encontrada uma lista de eventos no dicionário retornado para {url}: {raw_scrape_result}")
+                return
         elif isinstance(raw_scrape_result, list):
             events_from_url_raw = raw_scrape_result
         else:
